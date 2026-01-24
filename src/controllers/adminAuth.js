@@ -1,14 +1,16 @@
 const adminAuth = require("../model/adminAuth");
+const property = require("../model/property");
+const inquiry = require("../model/inquiry");
 const sendToken = require("../utils/sendToken");
 const bcrypt = require("bcrypt");
 // const sendMail = require("../utils/sendEmail");
 const crypto = require("crypto")
 
 exports.Register = async (req,res) => {
-   const { userName, userEmail, password, phoneNumber } = req.body;
+   const { userName, userEmail, password } = req.body;
    try{
 
-      if(!userName || !userEmail || !password || !phoneNumber){
+      if(!userName || !userEmail || !password){
         return res.status(400).json({message:"All fields are required"})
       }
 
@@ -24,7 +26,6 @@ exports.Register = async (req,res) => {
         userName,
         userEmail,
         password:hPassword,
-        phoneNumber
       })
       await user.save();
       await sendToken(user,res,201)
@@ -276,4 +277,56 @@ exports.ResetPassword = async (req, res) => {
     success: true,
     message: "Password has been reset successfully",
   });
+};
+
+
+
+exports.getDashboardStats = async (req, res) => {
+  try {
+    const [
+      totalProperties,
+      totalInquiries,
+      closedSales,
+      pendingInquiries,
+      monthlySales
+    ] = await Promise.all([
+      property.countDocuments(),
+      inquiry.countDocuments(),
+      inquiry.countDocuments({ status: "Closed" }),
+      inquiry.countDocuments({ status: "Pending" }),
+      inquiry.aggregate([
+  { $match: { status: "Closed" } },
+  {
+    $group: {
+      _id: { $month: "$createdAt" },
+      sales: { $sum: 1 }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      name: {
+        $arrayElemAt: [
+          ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+          { $subtract: ["$_id", 1] }
+        ]
+      },
+      sales: 1
+    }
+  },
+  { $sort: { name: 1 } }
+])
+
+    ]);
+
+    res.json({
+      totalProperties,
+      totalInquiries,
+      closedSales,
+      pendingInquiries,
+      monthlySales
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Dashboard error" });
+  }
 };

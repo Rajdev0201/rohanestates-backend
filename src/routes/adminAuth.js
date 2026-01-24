@@ -1,5 +1,5 @@
 const express = require('express');
-const { Register, login, logout, updateProfile, changePassword, deleteAccount,ResetLink,ResetPassword, profileData} = require('../controllers/adminAuth');
+const { Register, login, logout, updateProfile, changePassword, deleteAccount,ResetLink,ResetPassword, profileData, getDashboardStats} = require('../controllers/adminAuth');
 const userAuth = require('../middleware/auth');
 
 
@@ -22,4 +22,7 @@ router.delete("/delete-account", userAuth, deleteAccount);
 
 router.post("/user/forgotPassword",ResetLink)
 router.put("/user/changePassword/:token",ResetPassword)
+
+
+router.get("/getStates",getDashboardStats);
 module.exports = router;

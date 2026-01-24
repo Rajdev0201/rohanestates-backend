@@ -8,6 +8,9 @@ const cookieParser = require('cookie-parser');
 
 //routes
 const adminAuthRoutes = require('./routes/adminAuth');
+const inquiryRoutes = require('./routes/inquiry');
+const uploadRoutes = require('./routes/upload');
+const propertyRoutes = require('./routes/property');
 
 
 // const dotenv = require("dotenv")
@@ -26,12 +29,15 @@ app.use(express.urlencoded({ extended: true }));
 //accessing another domain req and send res
 app.use(cors({
     origin:["http://localhost:3000"],
-    methods:['GET', 'POST', 'PUT', 'DELETE'],
+    methods:['GET', 'POST', 'PUT', 'DELETE','PATCH'],
     credentials:true
 }));
 
 
-app.use('/admin', adminAuthRoutes);
+app.use('/', adminAuthRoutes);
+app.use('/',inquiryRoutes);
+app.use('/',uploadRoutes);
+app.use('/',propertyRoutes);
 
 //local port address
 app.listen(8000, () => {

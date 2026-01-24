@@ -16,9 +16,6 @@ const adminSchema = new mongoose.Schema({
     type:String,
      required:true
     },
-    phoneNumber:{
-    type:Number,
-    },
     type:{
     type:String,
     default:"admin"
