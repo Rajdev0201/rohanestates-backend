@@ -6,18 +6,15 @@ exports.createProperty = async (req, res) => {
       type,
       name,
       description,
-
       country,
       state,
       city,
       zipCode,
       address,
-
       price,
       totalArea,
       status,
       constructionYear,
-
       bedrooms,
       bathrooms,
       garages,
@@ -31,7 +28,6 @@ exports.createProperty = async (req, res) => {
       images,
     } = req.body;
 
-    // 🔴 REQUIRED VALIDATIONS
     if (!type)
       return res
         .status(400)
@@ -54,19 +50,16 @@ exports.createProperty = async (req, res) => {
       return res
         .status(400)
         .json({ success: false, message: "Price is required" });
+
+    if(!status)
+      return res
+        .status(400)
+        .json({ success: false, message: "Status is required" });
+
     if (!totalArea)
       return res
         .status(400)
         .json({ success: false, message: "Total area is required" });
-
-    if (!bedrooms)
-      return res
-        .status(400)
-        .json({ success: false, message: "Bedrooms are required" });
-    if (!bathrooms)
-      return res
-        .status(400)
-        .json({ success: false, message: "Bathrooms are required" });
 
     if (!images || images.length === 0)
       return res
@@ -78,18 +71,15 @@ exports.createProperty = async (req, res) => {
       type,
       name,
       description,
-
       country,
       state,
       city,
       zipCode,
       address,
-
       price,
       totalArea,
       status,
       constructionYear,
-
       bedrooms,
       bathrooms,
       garages,

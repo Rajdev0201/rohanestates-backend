@@ -61,7 +61,7 @@ exports.getInquiries = async (req, res) => {
 
     const query = {};
 
-    // 🔹 Filters
+    // Filters
     if (inquiryType) query.inquiryType = inquiryType;
     if (status) query.status = status;
 
@@ -72,7 +72,7 @@ exports.getInquiries = async (req, res) => {
       };
     }
 
-    // 🔹 Pagination
+    //  Pagination
     const skip = (page - 1) * limit;
 
     const [data, total] = await Promise.all([

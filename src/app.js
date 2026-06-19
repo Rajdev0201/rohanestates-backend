@@ -11,6 +11,7 @@ const adminAuthRoutes = require('./routes/adminAuth');
 const inquiryRoutes = require('./routes/inquiry');
 const uploadRoutes = require('./routes/upload');
 const propertyRoutes = require('./routes/property');
+const sellpropertyRoutes = require("./routes/sell");
 
 
 // const dotenv = require("dotenv")
@@ -28,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 
 //accessing another domain req and send res
 app.use(cors({
-    origin:["http://localhost:3000","https://rohanestates.vercel.app"],
+    origin:["http://localhost:3000","https://rohanestates.vercel.app","https://rohanestates.in"],
     methods:['GET', 'POST', 'PUT', 'DELETE','PATCH'],
     credentials:true
 }));
@@ -38,6 +39,7 @@ app.use('/', adminAuthRoutes);
 app.use('/',inquiryRoutes);
 app.use('/',uploadRoutes);
 app.use('/',propertyRoutes);
+app.use('/',sellpropertyRoutes);
 
 //local port address
 app.listen(8000, () => {

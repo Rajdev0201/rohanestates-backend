@@ -96,32 +96,37 @@ exports.profileData = async(req,res) => {
 }
 
 exports.updateProfile = async (req, res) => {
-    try {
-      const {phoneNumber} = req.body;
-      const userID = req.user._id;
-  
-        
-    const user = await adminAuth.findOne({_id:userID});
-      if (!user) {
-        return res.status(400).json({message:"User not found"});
-      }
-      if(!phoneNumber){
-         return res.status(400).json({message:"Mobile number filed should not be empty"});
-      }
-  
-      user.phoneNumber = phoneNumber;
-      await user.save();
-  
-    res.status(200).json({ 
-      success: true, 
-      message: "Profile updated successfully",
-      user: user 
-    });
-    } catch (error) {
-      console.log(error)
-      res.status(500).json({ success: false, message: "Internal server error" });
+  try {
+    const phoneNumber = req.body?.phoneNumber;
+    console.log("where",phoneNumber)
+
+    if (!phoneNumber) {
+      return res
+        .status(400)
+        .json({ message: "Mobile number field should not be empty" });
     }
- };
+
+    const userID = req.user._id;
+
+    const user = await adminAuth.findById(userID);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.phoneNumber = phoneNumber;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      user,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
   
 exports.changePassword = async (req, res) => {
     try {
